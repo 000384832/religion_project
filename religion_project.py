@@ -1,6 +1,7 @@
 import sys, codecs
 from nltk import word_tokenize
 from nltk import FreqDist
+from nltk.corpus import stopwords
 
 
 '''
@@ -73,7 +74,6 @@ def comparefiles():
     
     
 def occurencecount():
-    print("\n\nInside occurencecount -------------------")
     
     word = raw_input("Enter a word : ")
     
@@ -97,11 +97,34 @@ def occurencecount():
     print("Number of occurences in Text1:  " + str(fd_text2[word]))
     
 
+    
+    
 def topfive():
-    print("Inside topfive")
+    
+    
+    input_file = "Text1.ipynb"
+
+    fp = codecs.open(input_file, 'r', 'utf-8')
+    words = word_tokenize(fp.read())
+    words = [word for word in words if len(word) > 2]
 
 
-
+    #fdist1 = FreqDist(words)
+    #print(fdist1.most_common(10))
+    
+    stopwordsx = stopwords.words('english')
+    content = [w for w in words if w.lower() not in stopwordsx]
+    
+    fdist1 = FreqDist(content)
+    setcommon = set()
+    for word, frequency in fdist1.most_common(5):
+        print('%s;%d' % (word, frequency)).encode('utf-8')
+    
+    
+    
+    
+    
+    
 
 option = raw_input("\n\nWelcome to the program. Please pick one of the options below.\n"
                    "1) File Compare\n"
