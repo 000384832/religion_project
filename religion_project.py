@@ -1,4 +1,5 @@
 import sys, codecs
+import parse_bible
 from nltk import word_tokenize
 from nltk import FreqDist
 from nltk.corpus import stopwords
@@ -102,27 +103,45 @@ def occurencecount():
 def topfive():
     
     
-    input_file = "Text1.ipynb"
+    input_file1 = "Text1.ipynb"
+    input_file2 = "Text2.ipynb"
 
-    fp = codecs.open(input_file, 'r', 'utf-8')
-    words = word_tokenize(fp.read())
-    words = [word for word in words if len(word) > 2]
+    fp1 = codecs.open(input_file1, 'r', 'utf-8')
+    words1 = word_tokenize(fp1.read())
+    
+    fp2 = codecs.open(input_file2, 'r', 'utf-8')
+    words2 = word_tokenize(fp2.read())
+    
+    
+    
+    words1 = [word for word in words1 if len(word) > 2]
+    words2 = [word for word in words2 if len(word) > 2]
 
+    total_words = words1 + words2
 
     #fdist1 = FreqDist(words)
     #print(fdist1.most_common(10))
     
     stopwordsx = stopwords.words('english')
-    content = [w for w in words if w.lower() not in stopwordsx]
+    content = [w for w in total_words if w.lower() not in stopwordsx]
     
     fdist1 = FreqDist(content)
-    setcommon = set()
-    for word, frequency in fdist1.most_common(5):
+    mostcommonwords = []
+    for word, frequency in fdist1.most_common(10):
         print('%s;%d' % (word, frequency)).encode('utf-8')
+        mostcommonwords.append(word)
+    
+    book_chapters = parse_bible.bible["Ge"]
     
     
-    
-    
+    for i in range(len(book_chapters)):
+        for j in range(len(book_chapters[i])):
+            for k in mostcommonwords:
+                if k in book_chapters[i][j]:
+                    #print(k)
+                    print(book_chapters[i][j])
+                    break
+        
     
     
 
