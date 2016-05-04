@@ -7,72 +7,10 @@ from nltk.corpus import stopwords
 
 '''
 Present user with a menu with the following options
-Enter 1 to compare two files
-Enter 2 to find occurences in two files
-Enter 3 to take the top 10 words
+Enter 1 to find occurences in two files
+Enter 2 to take the top 10 words
+Enter 3 to find occernece count inside book
 '''
-
-def comparefiles():
-    # Ask the user to enter the names of files to compare
-    fname1 = raw_input("Enter the first filename: ")
-    print fname1
-    fname2 = raw_input("Enter the second filename: ")
-    # Open file for reading in text mode (default mode)
-    f1 = open(fname1)
-    f2 = open(fname2)
-
-    # Print confirmation
-    print("-----------------------------------")
-    print("Comparing files ", " > " + fname1, " < " +fname2, '\n')
-    print("-----------------------------------")
-
-    # Read the first line from the files
-    f1_line = f1.readline()
-    f2_line = f2.readline()
-
-    # Initialize counter for line number
-    line_no = 1
-
-    # Loop if either file1 or file2 has not reached EOF
-    while f1_line != '' or f2_line != '':
-
-        # Strip the leading whitespaces
-        f1_line = f1_line.rstrip()
-        f2_line = f2_line.rstrip()
-
-        # Compare the lines from both file
-        if f1_line != f2_line:
-
-            # If a line does not exist on file2 then mark the output with + sign
-            if f2_line == '' and f1_line != '':
-                print(">+", "Line-%d" % line_no, f1_line)
-            # otherwise output the line on file1 and mark it with > sign
-            elif f1_line != '':
-                print(">", "Line-%d" % line_no, f1_line)
-
-            # If a line does not exist on file1 then mark the output with + sign
-            if f1_line == '' and f2_line != '':
-                print("<+", "Line-%d" % line_no, f2_line)
-            # otherwise output the line on file2 and mark it with < sign
-            elif f2_line != '':
-                print("<", "Line-%d" %  line_no, f2_line)
-
-            # Print a blank line
-            print()
-
-        #Read the next line from the file
-        f1_line = f1.readline()
-        f2_line = f2.readline()
-
-
-        #Increment line counter
-        line_no += 1
-
-    # Close the files
-    f1.close()
-    f2.close()
-
-    
     
 def occurencecount():
     
@@ -110,10 +48,11 @@ def topten():
     # List all the stop words inside the english language
     stopwordsx = stopwords.words('english')
     
-    total_words = []
     
     # Interate through each file and read the words inside it
     for filename in fileList:
+        
+        total_words = []
         
         # Open the file
         fp1 = codecs.open(filename, 'r', 'utf-8')
@@ -126,18 +65,18 @@ def topten():
         total_words = total_words + words1
     
     
-    # Apply the stop words and filter them out of our total words read from the files
-    content = [w for w in total_words if w.lower() not in stopwordsx]
+        # Apply the stop words and filter them out of our total words read from the files
+        content = [w for w in total_words if w.lower() not in stopwordsx]
+
+        # Find the frequency of each word
+        fdist1 = FreqDist(content)
+        mostcommonwords = []
     
-    # Find the frequency of each word
-    fdist1 = FreqDist(content)
-    mostcommonwords = []
-    
-    # Print out the most common words shared among Text1 and Text2 - TOP 10 
-    print '\n\nMost common words (Text1 and Text2)'
-    for word, frequency in fdist1.most_common(10):
-        print('%s;%d' % (word, frequency)).encode('utf-8')
-        mostcommonwords.append(word)
+        # Print out the most common words shared among Text1 and Text2 - TOP 10 
+        print '\n\nMost common words ' + filename
+        for word, frequency in fdist1.most_common(10):
+            print('%s;%d' % (word, frequency)).encode('utf-8')
+            mostcommonwords.append(word)
     
     
     fileList = ['Text3.txt', 'Text4.txt']
@@ -158,7 +97,7 @@ def topten():
     fdist1 = FreqDist(content)
     mostcommonwords = []
     
-    print '\n\nMost common words (Text2 and Text3)'
+    print '\n\nMost common words (Text3 and Text4)'
     for word, frequency in fdist1.most_common(10):
         print('%s;%d' % (word, frequency)).encode('utf-8')
         mostcommonwords.append(word)
@@ -203,20 +142,17 @@ def bookoccuancecount():
     
 # Present a menu to the user and ask them to pick on of the following options.
 option = raw_input("\n\nWelcome to the program. Please pick one of the options below.\n"
-                   "1) File Compare\n"
-                   "2) Occurance Count\n"
-                   "3) Top 10 Words.\n"
-                   "4) Occurance Count Inside a Book.\n"
+                   "1) Occurance Count\n"
+                   "2) Top 10 Words.\n"
+                   "3) Occurance Count Inside a Book.\n"
                    "Enter your choice : ")
 
 # Run the corresponding method based on the chosen option.
 if option == '1':
-    comparefiles()
-elif option == '2':
         occurencecount()
-elif option == '3':
+elif option == '2':
         topten()
-elif option == '4':
+elif option == '3':
         bookoccuancecount()
 else:
     sys.exit(0)
